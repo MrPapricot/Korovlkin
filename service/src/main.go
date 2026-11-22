@@ -10,9 +10,16 @@ import (
 	"main/src/repositories"
 	"time"
 
+	"github.com/gofiber/contrib/v3/swaggo"
 	"github.com/gofiber/fiber/v3"
+
+	_ "main/src/docs"
 )
 
+// @title Task Service API
+// @version 1.0
+// @description REST API для управления задачами.
+// @BasePath /
 func main() {
 	cfg := config.LoadConfig()
 
@@ -38,6 +45,7 @@ func main() {
 			"status": "ok",
 		})
 	})
+	app.Get("/swagger/*", swaggo.HandlerDefault)
 
 	api := app.Group("/api/tasks")
 
