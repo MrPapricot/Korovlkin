@@ -1,0 +1,35 @@
+services:
+  task-psql:
+    image: postgres:18
+    container_name: task-service-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: task-db
+    volumes:
+      - task-pgdata:/var/lib/postgresql
+      - ./database:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d task-db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    ports:
+      - "5434:5432"
+  
+  task-app:
+    build:
+      context: ./service
+      dockerfile: Dockerfile
+    container_name: task-service-api
+    restart: unless-stopped
+    ports:
+      - "8085:8085"
+    depends_on:
+      task-psql:
+        condition: service_healthy
+
+volumes:
+  task-pgdata:
