@@ -40,6 +40,16 @@ func main() {
 		repositories.NewTaskRepository(pool),
 	)
 
+	// Delete godoc
+	// @Summary Удалить задачу
+	// @Description Удаляет задачу по её идентификатору.
+	// @Tags Tasks
+	// @Param id path int true "Идентификатор задачи"
+	// @Success 204 "Задача успешно удалена"
+	// @Failure 400 {object} map[string]string "Некорректный идентификатор"
+	// @Failure 404 {object} map[string]string "Задача не найдена"
+	// @Failure 500 {object} map[string]string "Ошибка удаления задачи"
+	// @Router /api/tasks/{id} [delete]
 	app.Get("/health", func(c fiber.Ctx) error {
 		return c.JSON(fiber.Map{
 			"status": "ok",

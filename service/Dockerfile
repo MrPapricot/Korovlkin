@@ -4,18 +4,20 @@ WORKDIR /src
 
 COPY ./src ./src
 
-RUN go install github.com/swaggo/swag/cmd/swag@latest && swag init -g ./src/main.go -o ./src/docs
+RUN go install github.com/swaggo/swag/cmd/swag@latest && swag init -g ./src/main.go -o ./src/docs --parseInternal
 
 
 FROM golang:1.27-alpine AS builder
 
 WORKDIR /src
 
-COPY go.mod go.sum ./
+COPY go.mod ./
 
 RUN go mod download
 
 COPY --from=docs-generator /src .
+
+RUN go mod tidy
 
 RUN CGO_ENABLED=0 GOOS=linux go build \
     -trimpath \

@@ -49,6 +49,18 @@ func validStatus(s string) bool {
 }
 
 // POST /api/tasks
+
+// Create godoc
+// @Summary Создать задачу
+// @Description Создаёт новую задачу с указанным названием и описанием. Статус устанавливается по умолчанию.
+// @Tags Tasks
+// @Accept json
+// @Produce json
+// @Param task body models.CreateTaskRequest true "Данные новой задачи"
+// @Success 201 {object} models.Task "Задача успешно создана"
+// @Failure 400 {object} map[string]string "Некорректный JSON или название задачи"
+// @Failure 500 {object} map[string]string "Ошибка создания задачи"
+// @Router /api/tasks [post]
 func (h *TaskHandler) Create(c fiber.Ctx) error {
 	var req models.CreateTaskRequest
 
@@ -84,6 +96,15 @@ func (h *TaskHandler) Create(c fiber.Ctx) error {
 }
 
 // GET /api/tasks
+
+// List godoc
+// @Summary Получить список задач
+// @Description Возвращает список всех задач.
+// @Tags Tasks
+// @Produce json
+// @Success 200 {array} models.Task "Список задач"
+// @Failure 500 {object} map[string]string "Ошибка получения списка задач"
+// @Router /api/tasks [get]
 func (h *TaskHandler) List(c fiber.Ctx) error {
 	tasks, err := h.repo.List(c)
 
@@ -99,6 +120,18 @@ func (h *TaskHandler) List(c fiber.Ctx) error {
 }
 
 // GET /api/tasks/:id
+
+// Get godoc
+// @Summary Получить задачу
+// @Description Возвращает задачу по её идентификатору.
+// @Tags Tasks
+// @Produce json
+// @Param id path int true "Идентификатор задачи"
+// @Success 200 {object} models.Task "Задача найдена"
+// @Failure 400 {object} map[string]string "Некорректный идентификатор"
+// @Failure 404 {object} map[string]string "Задача не найдена"
+// @Failure 500 {object} map[string]string "Ошибка получения задачи"
+// @Router /api/tasks/{id} [get]
 func (h *TaskHandler) Get(c fiber.Ctx) error {
 	id, ok := parseID(c)
 	if !ok {
@@ -123,6 +156,20 @@ func (h *TaskHandler) Get(c fiber.Ctx) error {
 }
 
 // PUT /api/tasks/:id
+
+// Update godoc
+// @Summary Обновить задачу
+// @Description Полностью обновляет название, описание и статус существующей задачи.
+// @Tags Tasks
+// @Accept json
+// @Produce json
+// @Param id path int true "Идентификатор задачи"
+// @Param task body models.UpdateTaskRequest true "Новые данные задачи"
+// @Success 200 {object} models.Task "Задача успешно обновлена"
+// @Failure 400 {object} map[string]string "Некорректный JSON, идентификатор или статус"
+// @Failure 404 {object} map[string]string "Задача не найдена"
+// @Failure 500 {object} map[string]string "Ошибка обновления задачи"
+// @Router /api/tasks/{id} [put]
 func (h *TaskHandler) Update(c fiber.Ctx) error {
 	id, ok := parseID(c)
 	if !ok {
@@ -177,6 +224,20 @@ func (h *TaskHandler) Update(c fiber.Ctx) error {
 }
 
 // PATCH /api/tasks/:id/status
+
+// UpdateStatus godoc
+// @Summary Изменить статус задачи
+// @Description Изменяет только статус существующей задачи.
+// @Tags Tasks
+// @Accept json
+// @Produce json
+// @Param id path int true "Идентификатор задачи"
+// @Param status body models.UpdateStatusRequest true "Новый статус задачи"
+// @Success 200 {object} models.Task "Статус успешно обновлён"
+// @Failure 400 {object} map[string]string "Некорректный JSON, идентификатор или статус"
+// @Failure 404 {object} map[string]string "Задача не найдена"
+// @Failure 500 {object} map[string]string "Ошибка обновления статуса"
+// @Router /api/tasks/{id}/status [patch]
 func (h *TaskHandler) UpdateStatus(c fiber.Ctx) error {
 	id, ok := parseID(c)
 	if !ok {
@@ -219,6 +280,17 @@ func (h *TaskHandler) UpdateStatus(c fiber.Ctx) error {
 }
 
 // DELETE /api/tasks/:id
+
+// Delete godoc
+// @Summary Удалить задачу
+// @Description Удаляет задачу по её идентификатору.
+// @Tags Tasks
+// @Param id path int true "Идентификатор задачи"
+// @Success 204 "Задача успешно удалена"
+// @Failure 400 {object} map[string]string "Некорректный идентификатор"
+// @Failure 404 {object} map[string]string "Задача не найдена"
+// @Failure 500 {object} map[string]string "Ошибка удаления задачи"
+// @Router /api/tasks/{id} [delete]
 func (h *TaskHandler) Delete(c fiber.Ctx) error {
 	id, ok := parseID(c)
 	if !ok {
